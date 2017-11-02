@@ -3,8 +3,8 @@
 set -e
 
 yum --nogpgcheck -y install \
-    http://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm \
-    http://download.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-9.noarch.rpm
+    http://yum.puppet.com/puppet6/puppet6-release-el-7.noarch.rpm \
+    epel-release
 yum -y install puppet-agent
 
 . /etc/profile.d/puppet-agent.sh
@@ -38,7 +38,9 @@ yum -y install \
     realmd \
     adcli \
     sssd \
-    krb5-workstation
+    krb5-workstation \
+    oddjob \
+    oddjob-mkhomedir
 
 while ! realm discover "$domain" ; do
     echo "Failed to discover realm $domain. Trying again in 10 seconds."

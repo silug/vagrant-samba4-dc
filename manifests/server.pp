@@ -10,6 +10,9 @@ yumrepo { 'steve-samba4-dc':
   baseurl             => 'https://copr-be.cloud.fedoraproject.org/results/steve/samba4-dc/epel-7-$basearch/',
   target              => '/etc/yum.repos.d/steve-samba4-dc-epel-7.repo',
 } ->
+package { 'yum-plugin-priorities':
+  ensure => installed,
+} ->
 package { [
     'ctdb',
     'libsmbclient',

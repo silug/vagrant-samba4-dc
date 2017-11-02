@@ -48,3 +48,13 @@ rsync -zavHPXA dc1:/var/lib/samba/sysvol/. /var/lib/samba/sysvol/.
 puppet resource service samba ensure=running enable=true
 
 echo "nameserver 0.0.0.0" >> /etc/resolv.conf
+
+yum -y install \
+    realmd \
+    adcli \
+    sssd \
+    krb5-workstation \
+    oddjob \
+    oddjob-mkhomedir 
+
+echo "$adminpass" | realm join --membership-software=adcli "$domain"

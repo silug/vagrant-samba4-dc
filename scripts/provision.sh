@@ -42,3 +42,18 @@ done
 set -e
 
 echo -e "nameserver $dc2" >> /etc/resolv.conf
+
+yum -y install \
+    realmd \
+    adcli \
+    sssd \
+    krb5-workstation \
+    oddjob \
+    oddjob-mkhomedir 
+
+while ! realm discover "$( facter domain )" ; do
+    echo "Failed to discover realm $( facter domain ). Trying again in 10 seconds."
+    sleep 10
+done
+
+echo "$adminpass" | realm join --membership-software=adcli "$( facter domain )"

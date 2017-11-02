@@ -1,15 +1,3 @@
-yumrepo { 'steve-samba4-dc':
-  ensure              => present,
-  descr               => 'Copr repo for samba4-dc owned by steve',
-  enabled             => true,
-  skip_if_unavailable => true,
-  gpgcheck            => '1',
-  repo_gpgcheck       => '0',
-  gpgkey              => 'https://copr-be.cloud.fedoraproject.org/results/steve/samba4-dc/pubkey.gpg',
-  priority            => '1',
-  baseurl             => 'https://copr-be.cloud.fedoraproject.org/results/steve/samba4-dc/epel-7-$basearch/',
-  target              => '/etc/yum.repos.d/steve-samba4-dc-epel-7.repo',
-} ->
 package { [
     'ctdb',
     'libsmbclient',

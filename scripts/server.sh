@@ -14,12 +14,13 @@ else
 fi
 
 yum --nogpgcheck -y install \
-    http://yum.puppet.com/puppet6/puppet6-release-fedora-29.noarch.rpm
+    http://yum.puppet.com/puppet6-release-fedora-32.noarch.rpm
 yum -y install puppet-agent
 
 . /etc/profile.d/puppet-agent.sh
 
-yum -y update
-
+puppet module install puppetlabs-inifile
 puppet apply "$vagrantsync"/manifests/server.pp
 puppet apply "$vagrantsync"/manifests/ssh.pp
+
+rm -fv /var/lib/sss/db/*

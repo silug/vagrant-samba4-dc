@@ -1,23 +1,55 @@
-package { [
-    'ctdb',
-    'libsmbclient',
-    'libwbclient',
-    'samba',
-    'samba-client',
-    'samba-client-libs',
-    'samba-common-libs',
-    'samba-common-tools',
-    'samba-dc',
-    'samba-dc-libs',
-    'samba-libs',
-    'samba-python',
-    'samba-vfs-glusterfs',
-    'samba-winbind',
-    'samba-winbind-clients',
-    'samba-winbind-krb5-locator',
-    'samba-winbind-modules',
-    'rsync',
-  ]:
+$packages = [
+  'samba-dc-bind-dlz',
+  'samba-dc',
+  'samba-client',
+  'bind',
+  'krb5-workstation',
+  'expect',
+  'rsync',
+  'realmd',
+  'adcli',
+  'sssd',
+  'oddjob-mkhomedir',
+  'oddjob',
+]
+
+$hosts = {
+  'localhost'    => {
+    'ip'           => '127.0.0.1',
+    'host_aliases' => 'localhost.localdomain',
+  },
+  'localhost6'   => {
+    'ip'           => '::1',
+    'host_aliases' => 'localhost6.localdomain6',
+  },
+  $facts['fqdn'] => {
+    'ip'           => $facts['ipaddress'],
+    'host_aliases' => $facts['hostname'],
+  },
+}
+
+$ini_settings = {
+  'default_realm'    => {
+    'path'    => '/etc/krb5.conf',
+    'section' => 'libdefaults',
+    'setting' => 'default_realm',
+    'value'   => $facts['domain'].upcase,
+  },
+  'dns_lookup_realm' => {
+    'path'    => '/etc/krb5.conf',
+    'section' => 'libdefaults',
+    'setting' => 'dns_lookup_realm',
+    'value'   => false,
+  },
+  'dns_lookup_kdc'   => {
+    'path'    => '/etc/krb5.conf',
+    'section' => 'libdefaults',
+    'setting' => 'dns_lookup_kdc',
+    'value'   => true,
+  }
+}
+
+package { $packages:
   ensure => installed,
 }
 
@@ -25,17 +57,14 @@ resources { 'host':
   purge => true,
 }
 
-host { 'localhost':
-  ip           => '127.0.0.1',
-  host_aliases => 'localhost.localdomain',
+$hosts.each |$key, $value| {
+  host { $key:
+    * => $value,
+  }
 }
 
-host { 'localhost6':
-  ip           => '::1',
-  host_aliases => 'localhost6.localdomain6',
-}
-
-host { $fqdn:
-  ip           => $ipaddress,
-  host_aliases => $hostname,
+$ini_settings.each |$key, $value| {
+  ini_setting { $key:
+    * => $value,
+  }
 }

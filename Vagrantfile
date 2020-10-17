@@ -16,12 +16,10 @@ Vagrant.configure(2) do |config|
     dc1.vm.hostname = "dc1.samba4.local"
 
     dc1.vm.provider :virtualbox do |vb|
-      vb.memory = "1024"
       vb.name = "dc1.samba4.local"
     end
 
     dc1.vm.provider :libvirt do |libvirt|
-      libvirt.memory = "1024"
       libvirt.qemu_use_session = false
     end
 
@@ -41,12 +39,10 @@ Vagrant.configure(2) do |config|
     dc2.vm.hostname = "dc2.samba4.local"
 
     dc2.vm.provider :virtualbox do |vb|
-      vb.memory = "1024"
       vb.name = "dc1.samba4.local"
     end
 
     dc2.vm.provider :libvirt do |libvirt|
-      libvirt.memory = "1024"
       libvirt.qemu_use_session = false
     end
 

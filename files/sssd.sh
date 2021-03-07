@@ -1,5 +1,9 @@
 #!/bin/bash
 
+set -e
+
+. /etc/profile.d/puppet-agent.sh
+
 yum -y install krb5-workstation sssd
 
 domain=$( facter domain )
@@ -35,8 +39,8 @@ id_provider = ad
 krb5_store_password_if_offline = True
 default_shell = /bin/bash
 ldap_id_mapping = True
-use_fully_qualified_names = True
-fallback_homedir = /home/%u@%d
+use_fully_qualified_names = False
+fallback_homedir = /home/%u
 access_provider = ad
 krb5_keytab = /var/lib/samba/private/secrets.keytab
 END_SSSD_CONF

@@ -6,7 +6,10 @@ The two domain controllers run
 and the client runs [CentOS 8](https://atlas.hashicorp.com/centos/boxes/8).
 The two domain controllers are using the stock Fedora packages.
 
-To test, simply do the following on a system with git and vagrant installed:
+To test, simply do the following on a system with Git,
+[Bolt](https://puppet.com/docs/bolt/latest/bolt.html),
+[Vagrant](https://vagrantup.com/), and a Vagrant provider
+([VirtualBox](https://www.virtualbox.org/) or libvirt) installed:
 
     git clone https://github.com/silug/vagrant-samba4-dc.git
     cd vagrant-samba4-dc

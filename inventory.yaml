@@ -1,0 +1,5 @@
+---
+targets:
+  - _plugin: task
+    task: bolt_vagrant::targets
+

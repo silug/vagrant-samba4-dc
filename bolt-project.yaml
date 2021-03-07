@@ -1,0 +1,7 @@
+---
+name: samba4_dc
+modules:
+- dylanratcliffe/bolt_vagrant
+- puppetlabs/inifile
+- puppetlabs/sshkeys_core
+- ghoneycutt/dnsclient

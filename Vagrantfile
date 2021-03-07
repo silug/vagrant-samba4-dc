@@ -1,5 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby ai et sw=2 :
+ENV['VAGRANT_EXPERIMENTAL'] = 'typed_triggers'
 
 adminpass = ENV['ADMINPASS'] || 'aMs]doam9pqxh0Ub'
 ip_subnet = ENV['IP_SUBNET'] || '192.168.42'
@@ -10,6 +11,8 @@ Vagrant.configure(2) do |config|
       p.memory = '1024'
     end
   end
+
+  config.vm.synced_folder '.', '/vagrant', disabled: true
 
   config.vm.define "dc1" do |dc1|
     dc1.vm.box = "fedora/32-cloud-base"
@@ -24,14 +27,7 @@ Vagrant.configure(2) do |config|
     end
 
     dc1.vm.network :private_network,
-      :ip => "#{ip_subnet}.101"
-    dc1.vm.provision :shell,
-      :path => "scripts/server.sh"
-    dc1.vm.provision :shell,
-      :path => "scripts/provision.sh",
-      :args => [ adminpass ]
-    dc1.vm.provision :shell,
-      :path => "scripts/sssd.sh"
+      ip: "#{ip_subnet}.101"
   end
 
   config.vm.define "dc2" do |dc2|
@@ -47,14 +43,7 @@ Vagrant.configure(2) do |config|
     end
 
     dc2.vm.network :private_network,
-      :ip => "#{ip_subnet}.102"
-    dc2.vm.provision :shell,
-      :path => "scripts/server.sh"
-    dc2.vm.provision :shell,
-      :path => "scripts/secondary.sh",
-      :args => [ adminpass ]
-    dc2.vm.provision :shell,
-      :path => "scripts/sssd.sh"
+      ip: "#{ip_subnet}.102"
   end
 
   config.vm.define "client" do |client|
@@ -69,9 +58,21 @@ Vagrant.configure(2) do |config|
       libvirt.qemu_use_session = false
     end
     client.vm.network :private_network,
-      :ip => "#{ip_subnet}.8"
-    client.vm.provision :shell,
-      :path => "scripts/client.sh",
-      :args => [ adminpass ]
+      ip: "#{ip_subnet}.8"
+  end
+
+  config.trigger.before [:up, :provision, :reload], type: :command do |trigger|
+    trigger.info = 'Initializing bolt'
+    trigger.run = { inline: 'bolt module install' }
+  end
+
+  config.trigger.after [:up, :provision, :reload], type: :command do |trigger|
+    trigger.info = 'Running bolt plan'
+    trigger.run = {
+      inline: [
+        'bolt plan run samba4_dc --run-as root --verbose',
+        "adminpass=#{adminpass}",
+      ].join(' '),
+    }
   end
 end

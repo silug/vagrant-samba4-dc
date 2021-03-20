@@ -4,8 +4,6 @@ set -e
 
 . /etc/profile.d/puppet-agent.sh
 
-yum -y install krb5-workstation sssd
-
 domain=$( facter domain )
 domain_lc=${domain,,}
 domain_uc=${domain^^}

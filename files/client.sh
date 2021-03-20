@@ -4,11 +4,10 @@ set -e
 
 . /etc/profile.d/puppet-agent.sh
 
-puppet resource package samba-client ensure=installed
-
 domain="$( facter domain )"
 
 yum -y install \
+    samba-client \
     realmd \
     adcli \
     sssd \

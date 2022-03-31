@@ -1,7 +1,9 @@
 /.vagrant/
+.sw?
 .*.sw?
 /.modules/
 /.plan_cache.json
+/.task_cache.json
 /.rerun.json
 /.resource_types/
 /bolt-debug.log
